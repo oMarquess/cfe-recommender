@@ -18,6 +18,7 @@ class ProductQuerySet(models.QuerySet):
             Q(rating_last_updated__isnull = True)|
             Q(rating_last_updated__lte = days_ago)
         )
+        
 
 
 class ProductManager(models.Manager):
