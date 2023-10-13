@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,10 @@ DATA_DIR = BASE_DIR / "data"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fm%ybj@63e@4jihj%36@ve4)*-7&i)_23lvvc2mpr+q5+gf*mj'
+SECRET_KEY = config('SECRET_KEY', default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG', default=0, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -38,9 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #external_apps
+    'django_celery_results',
+    'django_celery_beat',
+
     'profiles',
     'products',
-    'ratings'
+    'ratings',
+
+
+
 ]
 
 MIDDLEWARE = [
@@ -55,6 +63,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'recoengine.urls'
 
+CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL', default = 'redis://localhost:1234')
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
