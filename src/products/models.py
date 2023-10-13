@@ -40,6 +40,9 @@ class Products(models.Model):
 
     objects = ProductManager()
 
+    def get_absolute_url(self):
+        return f"/products/{self.id}/"
+
     def __str__(self):
         if not self.timestamp:
             return f"{self.brand}"
